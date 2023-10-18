@@ -1,19 +1,10 @@
-import time
 from uiautomator import device as d
 
 #debug
 #export ANDROID_HOME=/Users/alexcarter/Library/Android/sdk
 
-#space
-#period
-#comma
-#shift (?)
-#backspace (?)
-#number
 
-#qwerty 
-#starts at 0,658 > 720,1088
-
+#(0,658) > (720,1088)
 #column_width = 72
 #row_height = 86
 
@@ -110,9 +101,3 @@ def type_message(message):
 
 # Clear the existing text in the text editor
 #text_editor.clear()
-
-# Define the message to be typed
-#message = "Hel😄loWol😄d."
-
-#type_message(message)
-
