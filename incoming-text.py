@@ -26,6 +26,8 @@ def send_sms(tn, phone_number, message):
     tn.write(f"sms send {phone_number} {message}\n".encode('ascii'))
 
 tn = open_connection(5554)
-send_sms(tn, '1234567890', 'Hello, World!')
-send_sms(tn, '0987654321', 'Goodbye, World!')
+send_sms(tn, '1234567890', 'm1')
+send_sms(tn, '1234567890', 'm2')
+send_sms(tn, '1234567890', 'm3')
+#send_sms(tn, '0987654321', 'Goodbye, World!')
 close_connection(tn)
