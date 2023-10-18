@@ -24,10 +24,15 @@ coord_map = {
 'z': [72+36,751+86*3], 'x': [72*2+36,751+86*3], 'c': [72*3+36,751+86*3], 'v': [72*4+36,751+86*3], 'b': [72*5+36,751+86*3], 'n': [72*6+36,751+86*3], 'm': [72*7+36,751+86*3],
 ',': [72+36,751+86*4], ' ': [72*4+36,751+86*4], '.': [72*7+36,751+86*4],
 '1': [0,751], '2': [72,751], '3': [72*2,751], '4': [72*3,751], '5': [72*4,751], '6': [72*5,751], '7': [72*6,751], '8': [72*7,751], '9': [72*8,751], '0': [72*9,751],
+'@': [0+36,751+86], '#': [72+36,751+86], '$': [72*2+36,751+86], '%': [72*3+36,751+86], '&': [72*4+36,751+86], '-': [72*5+36,751+86], '+': [72*6+36,751+86], '(': [72*7+36,751+86], ')': [72*8+36,751+86],
+'*': [72+36,751+86*3], '"': [72*2+36,751+86*3], '\'': [72*3+36,751+86*3], ':': [72*4+36,751+86*3], ';': [72*5+36,751+86*3], '!': [72*6+36,751+86*3], '?': [72*7+36,751+86*3],
+}
+
+num_list = {'@', '#', '$', '%', '&', '-', '+', '(', ')',
+'*', '"', '\'', ':', ';', '!', '?',
 }
 
 def press_shift():
-    #"shift": [0,751+86*2]
     x = 0
     y = 751+86*3
     x += 36
@@ -35,7 +40,6 @@ def press_shift():
     d.click(x, y)
 
 def press_num():
-    #"shift": [0,751+86*2]
     x = 0
     y = 751+86*4
     x += 36
@@ -43,36 +47,44 @@ def press_num():
     d.click(x, y)
 
 def type_message(message):
+    text_editor = d(resourceId="com.android.mms:id/embedded_text_editor")
     shift_state = True
     first_pass = True
-    for c in message:
-        x = 0
-        y = 0
+    #add caps loc, special characters
+    #for c in message:
+    for pos in range(len(message)):
+        c = message[pos]
         if c.isalpha():
-            print(c, shift_state, c.islower(), c.isupper())
+            #print(c, shift_state, c.islower(), c.isupper())
             if c.islower() and shift_state:
-                print("p1")
                 press_shift()
             elif c.isupper() and not shift_state:
-                print("p2")
                 press_shift()
             x = coord_map[c.lower()][0]
             y = coord_map[c.lower()][1]
+            #offset to key center                
+            x += 36
+            y += 43
+            d.click(x, y)
+        elif c in {' ', ',', '.'}:
+            x = coord_map[c][0]
+            y = coord_map[c][1]
+            #offset to key center                
+            x += 36
+            y += 43
+            d.click(x, y)
+        elif c in num_list:
+            press_num()
+            x = coord_map[c][0]
+            y = coord_map[c][1]
+            #offset to key center                
+            x += 36
+            y += 43
+            d.click(x, y)
+            press_num()
         else:
-            if c in {' ', ',', '.'}:
-                x = coord_map[c][0]
-                y = coord_map[c][1]
-            #if c.isnumeric:
-            #    press_num()
-            #    x = coord_map[c][0]
-            #    y = coord_map[c][1]
-            #    press_num()
-        #offset to key center                
-        x += 36
-        y += 43
-        print(x,y)
-        d.click(x, y)
-        if first_pass:
+            text_editor.set_text(message[:pos+1])
+        if pos == 0:
             shift_state = False
             first_pass = False
 
@@ -100,6 +112,7 @@ def type_message(message):
 #text_editor.clear()
 
 # Define the message to be typed
-#message = "Hello, Wo123ld."
+#message = "Hel😄loWol😄d."
 
-type_message(message)
+#type_message(message)
+

@@ -1,3 +1,5 @@
 telnet localhost 5554 (you can find the portnumber in the title of the emulator)   
 auth $(cat ~/.emulator_console_auth_token)
 sms send <senderPhoneNumber> textmessage
+
+#adb emu sms send "1234567890" "sms send admu emu \uDE0A"
