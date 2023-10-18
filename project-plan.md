@@ -1,0 +1,28 @@
+gotta barebones demo of my youtube short generator 😂
+
+script was all gpt3, android input all automated
+
+next features i want to add: 
+-emoji support
+-automate the dialogue scripting part. I prompted chatgpt manually, so want it to be an api call and validate/format it to a script it can use
+-automate the video recording/editing
+    -want an over the top soundtrack with gasps and stuff, subway surfer gameplay, near-arab-funny level popup effects, anything to capture the addled mind of this generation
+-automate video uploadinig
+-long term might try with an android version not from the stone-age, but this is faster to iterate with
+
+RustyB AndroidVoiceText:
+    Nice I like it
+    Can you maybe make the phone taller so I can see more of the conversation
+    & is it possible to give Debby a different #
+    Do you make it auto type on keyboard
+    Can you maybe make the phone taller so I can see more of the conversation
+
+Alex Carter:
+    definitely agree on this. i dont know android particularly. as a user is there a way to do that easily? i am currently thinking then at the same time i go to a newer android version, id try to configure a custom hardware profile with an extra long screen and crop out some of the top and bottom
+
+RustyB AndroidVoiceText:
+    Android software should adapt to whatever the hardware is
+    So if you do a custom hardware profile youre good
+
+    yeah thats ez, thats just what i put as a test. u reminded me that another upgrade i want is dialogues with more than 2 ppl, so like you see a notification pop up, and then u change chats to talk to osomeone else
+and then the next next step would be switching apps to like snapchat, but wanna start w simipl stuff

@@ -73,6 +73,8 @@ def type_message(message):
             y += 43
             d.click(x, y)
             press_num()
+        elif c == '\n':
+            d(resourceId="com.android.mms:id/send_button_sms").click()
         else:
             text_editor.set_text(message[:pos+1])
         if pos == 0:

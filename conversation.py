@@ -35,10 +35,10 @@ def receive_sms(from_number, message):
     # Run the ADB command
     subprocess.call(adb_command, shell=True)
 
-f = open("demo-script2.txt", "r")
-for message in f:
-    #if x[:11] == "Character B":
-    if False:
+f = open("demo-script3.txt", "r")
+for x in f:
+    message = x[13:-1]
+    if x[:11] == "Character B":
         type_message(message)
     else:
         receive_sms("5128377500", message)
