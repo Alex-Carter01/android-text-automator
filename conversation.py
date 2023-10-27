@@ -35,6 +35,11 @@ def receive_sms(from_number, message):
     # Run the ADB command
     subprocess.call(adb_command, shell=True)
 
+type_message("what if THIS CHARACTRE IS ANGRY and WANTS ALL CAPS? emoooojis😂🔥💩...wowwy")
+type_message("TEST START all CAPS")
+receive_sms("5128377500", "hey bb.. what iif i recievde soome emojis😎🦄? ")
+
+"""
 f = open("demo-script3.txt", "r")
 for x in f:
     message = x[13:-1]
@@ -43,3 +48,4 @@ for x in f:
     else:
         receive_sms("5128377500", message)
         time.sleep(2)
+"""

@@ -1,4 +1,5 @@
 from uiautomator import device as d
+import time
 
 #debug
 #export ANDROID_HOME=/Users/alexcarter/Library/Android/sdk
@@ -49,7 +50,20 @@ def type_message(message):
             #print(c, shift_state, c.islower(), c.isupper())
             if c.islower() and shift_state:
                 press_shift()
+                shift_state = False
+                if pos == 0:
+                    shift_state = False
+                    first_pass = False
             elif c.isupper() and not shift_state:
+                if pos < len(message) - 1 and message[pos + 1].isupper():
+                    press_shift()
+                    shift_state = True
+                press_shift()
+            elif pos == 0 and c.isupper() and pos < len(message) - 1 and message[pos + 1].isupper():
+                print("weiird")
+                press_shift()
+                time.sleep(0.2)
+                press_shift()
                 press_shift()
             x = coord_map[c.lower()][0]
             y = coord_map[c.lower()][1]
@@ -78,8 +92,8 @@ def type_message(message):
         else:
             text_editor.set_text(message[:pos+1])
         if pos == 0:
-            shift_state = False
             first_pass = False
+        
 
     # Click on the send button.
     d(resourceId="com.android.mms:id/send_button_sms").click()
