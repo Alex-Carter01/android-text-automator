@@ -1,46 +1,34 @@
-import telnetlib
-import os
 import subprocess
 
-def open_connection(port):
-    # Define the host and port.
-    host = "localhost"
+def escape_emojis(text):
+    def unicode_to_utf16_surrogate(unicode_code_point):
+        # Subtract 0x10000 from the Unicode code point
+        value = unicode_code_point - 0x10000
 
-    # Create a Telnet object.
-    tn = telnetlib.Telnet(host, port)
+        # Calculate the high and low surrogates
+        high_surrogate = 0xD800 + ((value & 0xFFC00) >> 10)
+        low_surrogate = 0xDC00 + (value & 0x003FF)
 
-    # Get the auth token.
-    auth_token = os.popen('cat ~/.emulator_console_auth_token').read().strip()
+        # Convert the surrogates to Unicode escape sequences
+        high_surrogate_str = '\\u' + format(high_surrogate, '04x')
+        low_surrogate_str = '\\u' + format(low_surrogate, '04x')
 
-    # Send the auth command.
-    tn.write(f"auth {auth_token}\n".encode('ascii'))
+        # Return the surrogate pair
+        return high_surrogate_str + low_surrogate_str
 
-    # Return the Telnet object.
-    return tn
+    result = ''
+    for char in text:
+        if ord(char) > 0xFFFF:
+            result += unicode_to_utf16_surrogate(ord(char))
+        else:
+            result += char
+    return result
 
-def close_connection(tn):
-    # Close the Telnet connection.
-    tn.close()
+def receive_sms(from_number, message):
+    message = escape_emojis(message)
 
-def receive_sms(tn, phone_number, message):
-    unicode_message = message.encode('unicode_escape').decode('utf-8')
-
-    # Send the sms send command with the Unicode message.
-    tn.write(f"sms send {phone_number} {unicode_message}\n".encode('ascii'))
-
-#tn = open_connection(5554)
-#receive_sms(tn, '1234567890', 'm1')
-#receive_sms(tn, '1234567890', "\u2653")
-#close_connection(tn)
-
-"""
-def send_sms(from_number, message):
     # Construct the ADB command
     adb_command = f'adb emu sms send {from_number} "{message}"'
 
     # Run the ADB command
     subprocess.call(adb_command, shell=True)
-"""
-
-# Example usage
-#send_sms("1234567890", "Character A: Hey, did you hear abo😬ut Sarah and Mark?")

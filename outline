@@ -9,12 +9,11 @@ capsloc
 
 
 
-gotta barebones demo of my youtube short generator ð
+gotta barebones demo of my youtube short generator 
 
 script was all gpt3, android input all automated
 
 next features i want to add: 
--emoji support
 -automate the dialogue scripting part. I prompted chatgpt manually, so want it to be an api call and validate/format it to a script it can use
 -automate the video recording/editing
     -want an over the top soundtrack with gasps and stuff, subway surfer gameplay, near-arab-funny level popup effects, anything to capture the addled mind of this generation
