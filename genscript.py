@@ -1,11 +1,5 @@
-#llm api
-#validate into [characters], main characterr, [(c1,c2)dialogue]
-#create contacts
-#send to convo
-#delete contacts / logs
-
 from outgoingtext import type_message
-from conversation import receive_sms
+from incomingtext import receive_sms
 
 import os
 import openai
@@ -51,3 +45,26 @@ completion = openai.ChatCompletion.create(
 # Extract and print the response to the follow-up question
 char_list = completion.choices[0]['message']['content']
 print(char_list)
+
+
+# Define the name of the environment variable
+env_var_name = "FILE_COUNTER"
+
+# Get the current counter value from the environment variable
+counter = int(os.getenv(env_var_name, 0))
+
+# Increment the counter for the next file
+counter += 1
+
+# Update the environment variable with the new counter value
+os.environ[env_var_name] = str(counter)
+
+# Create the file name with an incremented counter
+file_name = f"script{counter}.txt"
+
+with open(file_path, 'w') as file:
+    file.write(main_character + "\n")
+    file.write(char_list + "\n")
+    file.write(script)
+
+print(f"Script and data has been written to {file_name}")

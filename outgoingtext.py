@@ -4,7 +4,6 @@ import time
 #debug
 #export ANDROID_HOME=/Users/alexcarter/Library/Android/sdk
 
-
 #(0,658) > (720,1088)
 #column_width = 72
 #row_height = 86
@@ -99,6 +98,8 @@ def type_message(message):
     d(resourceId="com.android.mms:id/send_button_sms").click()
 
 
+
+#misceelaneous ADB UI things
 
 # Open the messaging app.
 #d(text="Messaging").click()
