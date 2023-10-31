@@ -3,7 +3,15 @@ from incomingtext import receive_sms
 
 import os
 import openai
-openai.api_key = os.getenv("OPENAI_API_KEY")
+import re
+
+#openai.api_key = os.getenv("OPENAI_API_KEY")
+
+openai.api_key = "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"
+
+# Custom exception
+class CustomError(Exception):
+    pass
 
 # Define the conversation history
 conversation = [
@@ -23,9 +31,9 @@ print(script)
 # Validate script format
 pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
 
-if len(script.split('\n') < 20):
+if len(script.split('\n')) < 20:
     print("script too short")
-    break
+    raise CustomError("script too short")
 
 mc_question = "I am looking for a one word answer: who is the main character? do not include any extra words"
 conversation.append({"role": "user", "content": mc_question})
@@ -36,8 +44,8 @@ completion = openai.ChatCompletion.create(
   messages=conversation
 )
 
-main_character = completion.choices[0]['message']['content']
-print(main_character)
+main_char = completion.choices[0]['message']['content']
+print(main_char)
 
 chars_question = "please give a set of the characters in the format [character1, character2, character3]. do not include any unncessary words"
 conversation.append({"role": "user", "content": chars_question})
@@ -62,16 +70,22 @@ for line in script.split('\n'):
         print(f"Character1: {character1}, Character2: {character2}, Dialogue: {dialogue}")
         if not (character1 == main_char or character2 == main_char):
             print("main character not involved in dialogue")
+            raise CustomError("main character not involved in dialogue")
             break
         if not (character1 in char_list):
             print("character1 does not exist")
+            raise CustomError("character1 does not exist")
             break
         if not (character2 in char_list):
             print("character2 does not exist")
+            raise CustomError("character2 does not exist")
             break
     else:
         print("line does not contain valid tag")
+        raise CustomError("line does not contain valid tag")
         break
+
+print("Validation successful, writing script to file...")
 
 # Define the name of the environment variable
 env_var_name = "FILE_COUNTER"
@@ -89,7 +103,7 @@ os.environ[env_var_name] = str(counter)
 file_name = f"script{counter}.txt"
 
 with open(file_path, 'w') as file:
-    file.write(main_character + "\n")
+    file.write(main_char + "\n")
     file.write(char_list + "\n")
     file.write(script)
 

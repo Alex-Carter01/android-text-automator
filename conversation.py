@@ -2,6 +2,17 @@ from outgoingtext import type_message
 from incomingtext iimport receive_sms
 import time
 
+###########################
+# High Level Script Parser
+# Input: Script file with main character, character list header
+# Action: Orchestrates everything needed for a conversation
+#       Creates android contact cards, iterates script lines, decides typing actions
+###########################
+
+# Custom exception
+class CustomError(Exception):
+    pass
+
 #TODO create contacts
 
 pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
@@ -11,7 +22,8 @@ f = open("demo-meta1.txt", "r")
 lines = file.readlines()
 if len(lines < 3):
     print("script too short AND VALIDATION ERROR")
-    break
+    raise CustomError("script too short AND VALIDATION ERROR")
+
 main_char = lines[0]
 char_list = lines[1]
 
