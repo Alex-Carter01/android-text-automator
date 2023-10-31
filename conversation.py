@@ -4,23 +4,33 @@ import time
 
 #TODO create contacts
 
+pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
+
 f = open("demo-meta1.txt", "r")
 
 lines = file.readlines()
-if len(lines < 20):
-    print("script too short")
+if len(lines < 3):
+    print("script too short AND VALIDATION ERROR")
     break
 main_char = lines[0]
 char_list = lines[1]
 
+#converse lines
 for line in lines[2:]:
-    if #main, otro
-        type_message(line)
-    elif #otro, main
-        receive_sms(number, line)
+    match = re.match(pattern, line)
+    if match:
+        character1 = match.group(1)
+        character2 = match.group(2)
+        dialogue = match.group(3)
+        if character1 == main_char:
+            type_message(line)
+        elif character2 == main_char:
+            receive_sms(number, line)
+        else:
+            print("main character not involved in dialogue AND VALIDATION FAIL")
+            break
     else:
-        print("main character not involved in dialogue")
-        break
-    
+        print("line does not contain valid tag AND VALIDATION FAIL")
+
 
 #TODO delete contacts / logs

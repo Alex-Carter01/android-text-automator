@@ -11,7 +11,6 @@ conversation = [
     {"role": "user", "content": "I want you to write a story with 3 speaking characters: Alice, Bob, and Carly as long as you can.  I want you to pick one of the character who is \"the main character\", all dialogue should include them as either speaker or receiver. This story should be communicated entirely over text messages. do not include parenthetical comments, stage directions, or information about the characters, just their text-message based dialogue. Do not add empty lines between dialogue. Please use common text abbreviations, lots of emojis, etc. It should involve relationships, gossip, and be very trashy. the more unexpected twists the better. The story should be formatted as\n(CharacterNameSpeaking, CharacterNameReceiving) Dialogue\n Lengthy pieces of dialogue can be broken to multiple lines, each prefaced with the same (CharacterNameSpeaking, CharacterNameReceiving) tag"}
 ]
 
-
 # Initial script API call
 completion = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
@@ -20,6 +19,13 @@ completion = openai.ChatCompletion.create(
 
 script = completion.choices[0]['message']['content']
 print(script)
+
+# Validate script format
+pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
+
+if len(script.split('\n') < 20):
+    print("script too short")
+    break
 
 mc_question = "I am looking for a one word answer: who is the main character? do not include any extra words"
 conversation.append({"role": "user", "content": mc_question})
@@ -46,6 +52,26 @@ completion = openai.ChatCompletion.create(
 char_list = completion.choices[0]['message']['content']
 print(char_list)
 
+# Validate Main character use and existance of speaking characters
+for line in script.split('\n'):
+    match = re.match(pattern, line)
+    if match:
+        character1 = match.group(1)
+        character2 = match.group(2)
+        dialogue = match.group(3)
+        print(f"Character1: {character1}, Character2: {character2}, Dialogue: {dialogue}")
+        if not (character1 == main_char or character2 == main_char):
+            print("main character not involved in dialogue")
+            break
+        if not (character1 in char_list):
+            print("character1 does not exist")
+            break
+        if not (character2 in char_list):
+            print("character2 does not exist")
+            break
+    else:
+        print("line does not contain valid tag")
+        break
 
 # Define the name of the environment variable
 env_var_name = "FILE_COUNTER"
