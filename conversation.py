@@ -1,5 +1,6 @@
 from outgoingtext import type_message
-from incomingtext iimport receive_sms
+from incomingtext import receive_sms
+
 import time
 
 ###########################
@@ -13,7 +14,7 @@ import time
 class CustomError(Exception):
     pass
 
-#TODO create contacts
+# TODO create contacts
 
 pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
 

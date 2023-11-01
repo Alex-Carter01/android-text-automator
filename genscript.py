@@ -1,9 +1,7 @@
-from outgoingtext import type_message
-from incomingtext import receive_sms
-
 import os
-import openai
 import re
+import subprocess
+import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -14,12 +12,12 @@ class CustomError(Exception):
 main_char = "Alice"
 char_list = ["Alice", "Bob", "Carly"]
 
-user_content_template = "I want you to write a story with {} speaking characters: {}. Write this script to be as lengthy as you can.  {} is \"the main character\", all dialogue should include {} as either CharacterNameSpeaking or CharacterNameReceiving. This story should be communicated entirely over text messages. do not include parenthetical comments, stage directions, or information about the characters, just their text-message based dialogue. Please use common text abbreviations, lots of emojis, etc. It should involve relationships, gossip, and be very trashy. the more unexpected twists the better. The story should be formatted as\n(CharacterNameSpeaking, CharacterNameReceiving) Dialogue\n Lengthy pieces of dialogue can be broken to multiple lines, each prefaced with the same (CharacterNameSpeaking, CharacterNameReceiving) tag"
+user_content_template = "I want you to write a story with {} speaking characters: {}. Write this script to be as lengthy as you can.  {} is \"the main character\", all dialogue should include {} as either CharacterNameSpeaking or CharacterNameReceiving. This story should be communicated entirely over text messages. do not include parenthetical comments, stage directions, or information about the characters, just their text-message based dialogue. Please use common text abbreviations, lots of emojis, etc. It should involve relationships, gossip, and be very trashy. the more unexpected twists the better. The story should be formatted as\n(CharacterNameSpeaking, CharacterNameReceiving) Dialogue"
 user_content = user_content_template.format(len(char_list), ', '.join(char_list), main_char, main_char)
 
 # Define the conversation history
 conversation = [
-    {"role": "system", "content": "You are a contemporary drama writer, skilled in creating dialogue that is captivating and full of surprises. Stylistically, you begin every line of dialogue with a (CharacterNameSpeaking, CharacterNameReceiving) tag. Stylistcally, you often breakdown one piece of dialogue into two shorter messages, with the same (CharacterNameSpeaking, CharacterNameReceiving) tag"},
+    {"role": "system", "content": "You are a contemporary drama writer, skilled in creating dialogue that is captivating and full of surprises. Stylistically, you begin every line of dialogue with a (CharacterNameSpeaking, CharacterNameReceiving) tag."},
     {"role": "user", "content": user_content}
 ]
 
@@ -43,8 +41,10 @@ if len(script_lines) < 20:
 pattern = r'\(([^,]+),\s*([^)]+)\)\s*(.+)'
 
 # Validate Main character use and existance of speaking characters
+valid_lines = []
 for line in script_lines:
     if len(line) < 3:
+        #print("Error, line too short")
         continue
     print("line",  line)
     match = re.match(pattern, line)
@@ -56,40 +56,35 @@ for line in script_lines:
         if not (character1 == main_char or character2 == main_char):
             print("ERROR main character not involved in dialogue")
             #raise CustomError("main character not involved in dialogue")
-            #break
-        if not (character1 in char_list):
-            print("ERROR character1 does not exist")
-            #raise CustomError("character1 does not exist")
-            #break
-        if not (character2 in char_list):
-            print("ERROR character2 does not exist")
-            #raise CustomError("character2 does not exist")
-            #break
+            continue
+        if not (character1 in char_list and character2 in char_list):
+            print("ERROR character does not exist")
+            #raise CustomError("character does not exist")
+            continue
+        valid_lines.append(line)
     else:
         print("ERROR line does not contain valid tag")
-        raise CustomError("line does not contain valid tag")
-        break
+        continue
 
 print("Validation successful, writing script to file...")
 
-# Define the name of the environment variable
-env_var_name = "FILE_COUNTER"
+# Read counter from a file
+with open('counter.txt', 'r') as file:
+    counter = int(file.read())
 
-# Get the current counter value from the environment variable
-counter = int(os.getenv(env_var_name, 0))
-
-# Increment the counter for the next file
+# Increment the counter
 counter += 1
 
-# Update the environment variable with the new counter value
-os.environ[env_var_name] = str(counter)
+# Write the updated counter back to the file
+with open('counter.txt', 'w') as file:
+    file.write(str(counter))
 
 # Create the file name with an incremented counter
 file_name = f"script{counter}.txt"
 
-with open(file_name, 'w') as file:
+with open("scripts/" + file_name, 'w') as file:
     file.write(main_char + "\n")
     file.write(str(char_list) + "\n")
-    file.write(script)
+    file.write('\n'.join(valid_lines))
 
-print(f"Script and data has been written to {file_name}")
+print(f"Script and data has been written to scripts/{file_name}")
