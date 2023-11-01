@@ -46,21 +46,20 @@ for line in script_lines:
     if len(line) < 3:
         #print("Error, line too short")
         continue
-    print("line",  line)
+    #print("line",  line)
     match = re.match(pattern, line)
     if match:
         character1 = match.group(1)
         character2 = match.group(2)
         dialogue = match.group(3)
-        print(f"Character1: {character1}, Character2: {character2}, Dialogue: {dialogue}")
         if not (character1 == main_char or character2 == main_char):
+            print(f"Character1: {character1}, Character2: {character2}, Dialogue: {dialogue}")
             print("ERROR main character not involved in dialogue")
-            #raise CustomError("main character not involved in dialogue")
-            continue
+            raise CustomError("main character not involved in dialogue")
         if not (character1 in char_list and character2 in char_list):
+            print(f"Character1: {character1}, Character2: {character2}, Dialogue: {dialogue}")
             print("ERROR character does not exist")
-            #raise CustomError("character does not exist")
-            continue
+            raise CustomError("character does not exist")
         valid_lines.append(line)
     else:
         print("ERROR line does not contain valid tag")
